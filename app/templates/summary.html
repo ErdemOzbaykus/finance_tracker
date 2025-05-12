@@ -2,21 +2,30 @@
 
 {% extends 'base.html' %} {% block content %}
 <h2>Finansal Özet</h2>
-<p>Toplam Gelir: {{ income }} ₺</p>
-<p>Toplam Gider: {{ expense }} ₺</p>
-<p>Bakiye: {{ balance }} ₺</p>
+<p><strong>Toplam Gelir:</strong> {{ income }} ₺</p>
+<p><strong>Toplam Gider:</strong> {{ expense }} ₺</p>
+<p><strong>Bakiye:</strong> {{ balance }} ₺</p>
 
 {% if warnings %}
-<h3>Uyarılar</h3>
-<ul>
-  {% for w in warnings %}
-  <li>{{ w }}</li>
-  {% endfor %}
-</ul>
+<div class="alert alert-warning">
+  <ul>
+    {% for w in warnings %}
+    <li>{{ w }}</li>
+    {% endfor %}
+  </ul>
+</div>
 {% endif %} {% if monthly_plot %}
-<h3>Aylık Gelir-Gider Grafiği</h3>
-<img src="data:image/png;base64,{{ monthly_plot }}" alt="Aylık Grafik" />
+<h4 class="mt-4">Aylık Gelir-Gider Grafiği</h4>
+<img
+  src="data:image/png;base64,{{ monthly_plot }}"
+  alt="Aylık Grafik"
+  class="img-fluid"
+/>
 {% endif %} {% if category_plot %}
-<h3>Kategori Bazlı Gider Dağılımı</h3>
-<img src="data:image/png;base64,{{ category_plot }}" alt="Kategori Grafiği" />
+<h4 class="mt-4">Kategori Bazlı Gider Dağılımı</h4>
+<img
+  src="data:image/png;base64,{{ category_plot }}"
+  alt="Kategori Grafiği"
+  class="img-fluid"
+/>
 {% endif %} {% endblock %}

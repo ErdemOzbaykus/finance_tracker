@@ -4,25 +4,57 @@
 <html lang="tr">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Finans Takip</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <h1>📊 Kişisel Finans Takip</h1>
-    <nav>
-      <a href="{{ url_for('main.index') }}">Anasayfa</a> |
-      <a href="{{ url_for('main.add_transaction') }}">İşlem Ekle</a> |
-      <a href="{{ url_for('main.summary') }}">Özet</a> |
-      <a href="{{ url_for('main.set_limit') }}">Limitler</a> |
-      <a href="{{ url_for('main.upload') }}">Excel Yükle</a>
+  <body class="bg-light text-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}"
+          >Finans Takip</a
+        >
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('main.add_transaction') }}"
+                >İşlem Ekle</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('main.summary') }}">Özet</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('main.set_limit') }}"
+                >Limitler</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('main.upload') }}"
+                >Excel Yükle</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
-    <hr />
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %}
-    <ul>
-      {% for category, message in messages %}
-      <li><strong>{{ category }}:</strong> {{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %} {% endwith %} {% block content %}{% endblock %}
+
+    <div class="container mt-4">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="alert alert-info">
+        <ul class="mb-0">
+          {% for category, message in messages %}
+          <li><strong>{{ category.title() }}:</strong> {{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %} {% endwith %} {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

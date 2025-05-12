@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from .forms import TransactionForm, LimitForm, UploadForm
 from .models import Transaction, Limit
@@ -51,15 +53,34 @@ def set_limit():
 def upload():
     form = UploadForm()
     if form.validate_on_submit():
+        print("✅ Form gönderildi.")
         file = form.file.data
+        print(f"📄 Dosya adı: {file.filename}")
         filename = secure_filename(file.filename)
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
 
+        # Eksikse uploads klasörünü oluştur
+        if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
+            os.makedirs(current_app.config['UPLOAD_FOLDER'])
+
+        file.save(filepath)
+        print(f"📂 Kaydedilen yol: {filepath}")
         try:
-            df = pd.read_excel(filepath) if filename.endswith('.xlsx') else pd.read_csv(filepath)
-            df['Tarih'] = pd.to_datetime(df['Tarih'])
-            df['Tutar'] = df['Tutar'].astype(float)
+            # xls için engine belirt
+            if filename.endswith('.xls'):
+                df = pd.read_excel(filepath, engine='xlrd')
+            else:
+                df = pd.read_excel(filepath)
+
+            required_cols = ['Tarih', 'Açıklama', 'Tutar']
+            for col in required_cols:
+                if col not in df.columns:
+                    raise ValueError(f"'{col}' sütunu eksik!")
+
+            df['Tarih'] = pd.to_datetime(df['Tarih'], errors='coerce')
+            df['Tutar'] = pd.to_numeric(df['Tutar'], errors='coerce')
+            df = df.dropna(subset=['Tarih', 'Tutar'])
+
             df['Tür'] = df['Tutar'].apply(lambda x: 'gelir' if x > 0 else 'gider')
             df['Kategori'] = df['Açıklama'].fillna('diğer').str.lower()
 
@@ -76,7 +97,7 @@ def upload():
             return redirect(url_for('main.summary'))
 
         except Exception as e:
-            flash(f"Hata: {e}", "danger")
+            flash(f"Yükleme hatası: {e}", "danger")
 
     return render_template('upload.html', form=form)
 
@@ -88,7 +109,8 @@ def summary():
 
     warnings = []
     for limit in Limit.query.all():
-        total = db.session.query(func.sum(Transaction.amount)).filter_by(type='gider', category=limit.category).scalar() or 0
+        total = db.session.query(func.sum(Transaction.amount))\
+            .filter_by(type='gider', category=limit.category).scalar() or 0
         if total > limit.limit:
             warnings.append(f"⚠️ {limit.category} harcaması limiti ({limit.limit}₺) aştı: {total}₺")
 
@@ -125,5 +147,10 @@ def summary():
         buf2.seek(0)
         category_plot = base64.b64encode(buf2.read()).decode('utf-8')
 
-    return render_template('summary.html', income=income, expense=expense, balance=balance,
-                           warnings=warnings, monthly_plot=monthly_plot, category_plot=category_plot)
+    return render_template('summary.html',
+                           income=income,
+                           expense=expense,
+                           balance=balance,
+                           warnings=warnings,
+                           monthly_plot=monthly_plot,
+                           category_plot=category_plot)

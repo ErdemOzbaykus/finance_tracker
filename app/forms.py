@@ -15,5 +15,7 @@ class LimitForm(FlaskForm):
     submit = SubmitField('Kaydet / Güncelle')
 
 class UploadForm(FlaskForm):
-    file = FileField('Excel Dosyası (.xlsx, .csv)', validators=[FileAllowed(['xlsx', 'csv'], 'Sadece Excel dosyası!')])
+    file = FileField('Excel Dosyası (.xlsx, .xls, .csv)', validators=[
+        FileAllowed(['xls', 'xlsx', 'csv'], 'Sadece Excel dosyası yükleyebilirsiniz.')
+    ])
     submit = SubmitField('Yükle')

@@ -2,18 +2,25 @@
 
 {% extends 'base.html' %} {% block content %}
 <h2>Harcama Limitleri</h2>
-<form method="POST">
-  {{ form.hidden_tag() }} {{ form.category.label }} {{ form.category() }}<br />
-  {{ form.limit.label }} {{ form.limit() }}<br />
-  {{ form.submit() }}
+<form method="POST" class="mt-3">
+  {{ form.hidden_tag() }}
+  <div class="mb-3">
+    {{ form.category.label(class="form-label") }} {{
+    form.category(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    {{ form.limit.label(class="form-label") }} {{
+    form.limit(class="form-control") }}
+  </div>
+  {{ form.submit(class="btn btn-success") }}
 </form>
 
-<h3>Tanımlı Limitler:</h3>
-<ul>
+<h3 class="mt-4">Tanımlı Limitler:</h3>
+<ul class="list-group">
   {% for limit in limits %}
-  <li>{{ limit.category }}: {{ limit.limit }} ₺</li>
+  <li class="list-group-item">{{ limit.category }}: {{ limit.limit }} ₺</li>
   {% else %}
-  <li>Henüz limit tanımlanmadı.</li>
+  <li class="list-group-item">Henüz limit tanımlanmadı.</li>
   {% endfor %}
 </ul>
 {% endblock %}
