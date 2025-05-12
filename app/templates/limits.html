@@ -1,0 +1,19 @@
+<!-- @format -->
+
+{% extends 'base.html' %} {% block content %}
+<h2>Harcama Limitleri</h2>
+<form method="POST">
+  {{ form.hidden_tag() }} {{ form.category.label }} {{ form.category() }}<br />
+  {{ form.limit.label }} {{ form.limit() }}<br />
+  {{ form.submit() }}
+</form>
+
+<h3>Tanımlı Limitler:</h3>
+<ul>
+  {% for limit in limits %}
+  <li>{{ limit.category }}: {{ limit.limit }} ₺</li>
+  {% else %}
+  <li>Henüz limit tanımlanmadı.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

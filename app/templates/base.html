@@ -1,0 +1,28 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Finans Takip</title>
+  </head>
+  <body>
+    <h1>📊 Kişisel Finans Takip</h1>
+    <nav>
+      <a href="{{ url_for('main.index') }}">Anasayfa</a> |
+      <a href="{{ url_for('main.add_transaction') }}">İşlem Ekle</a> |
+      <a href="{{ url_for('main.summary') }}">Özet</a> |
+      <a href="{{ url_for('main.set_limit') }}">Limitler</a> |
+      <a href="{{ url_for('main.upload') }}">Excel Yükle</a>
+    </nav>
+    <hr />
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %}
+    <ul>
+      {% for category, message in messages %}
+      <li><strong>{{ category }}:</strong> {{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %} {% block content %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<!-- @format -->
+
+{% extends 'base.html' %} {% block content %}
+<h2>Finansal Özet</h2>
+<p>Toplam Gelir: {{ income }} ₺</p>
+<p>Toplam Gider: {{ expense }} ₺</p>
+<p>Bakiye: {{ balance }} ₺</p>
+
+{% if warnings %}
+<h3>Uyarılar</h3>
+<ul>
+  {% for w in warnings %}
+  <li>{{ w }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% if monthly_plot %}
+<h3>Aylık Gelir-Gider Grafiği</h3>
+<img src="data:image/png;base64,{{ monthly_plot }}" alt="Aylık Grafik" />
+{% endif %} {% if category_plot %}
+<h3>Kategori Bazlı Gider Dağılımı</h3>
+<img src="data:image/png;base64,{{ category_plot }}" alt="Kategori Grafiği" />
+{% endif %} {% endblock %}

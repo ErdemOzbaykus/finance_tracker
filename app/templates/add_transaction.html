@@ -1,0 +1,11 @@
+<!-- @format -->
+
+{% extends 'base.html' %} {% block content %}
+<h2>Gelir/Gider Ekle</h2>
+<form method="POST">
+  {{ form.hidden_tag() }} {{ form.type.label }} {{ form.type() }}<br />
+  {{ form.category.label }} {{ form.category() }}<br />
+  {{ form.amount.label }} {{ form.amount() }}<br />
+  {{ form.submit() }}
+</form>
+{% endblock %}
